@@ -1,11 +1,11 @@
 class VideoDigital extends ItemBibliotecaDigital implements Baixavel, Visualizavel {
-    public VideoDigital(String titulo, String autor) {
-        super(titulo, autor);
+    public VideoDigital(String titulo, String autor, int id) {
+        super(titulo, autor, id);
     }
 
     @Override
     public String descricao() {
-        return "Vídeo: " + getTitulo() + " - Autor: " + getAutor();
+        return "Id: " + getId() + " Vídeo: " + getTitulo() + " - Autor: " + getAutor();
     }
 
     @Override
