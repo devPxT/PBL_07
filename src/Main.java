@@ -61,7 +61,7 @@ public class Main {
                         cadastrarItem(scanner);
                         break;
                     case 0:
-                        System.out.println("Encerrando o programa...");
+                        System.out.println("Saindo...");
                         break;
                     default:
                         System.out.println("Opção inválida! Por favor, tente novamente.");
@@ -84,7 +84,7 @@ public class Main {
         } else {
             for (ItemBibliotecaDigital item : estoque) {
                 if (item instanceof Ebook) {
-                    System.out.println(item.toString());
+                    System.out.println(item.descricao());
                 }
             }
         }
@@ -94,13 +94,14 @@ public class Main {
         System.out.println("\n=== Videos Digitais Disponiveis ===");
         if (estoque.isEmpty()) {
             System.out.println("Nenhum Video Digital encontrado.");
-        } else {
-            for (ItemBibliotecaDigital item : estoque) {
-                if (item instanceof VideoDigital) {
-                    System.out.println(item.toString());
-                }
+            return;
+        }
+        for (ItemBibliotecaDigital item : estoque) {
+            if (item instanceof VideoDigital) {
+                System.out.println(item.descricao());
             }
         }
+        
     }
     
     private static void listarItemPorId(Scanner scanner) {
@@ -110,7 +111,7 @@ public class Main {
         for (ItemBibliotecaDigital item : estoque) {
             if (item.getId() == id) {
                 System.out.println("Item encontrado:");
-                System.out.println(item.toString());
+                System.out.println(item.descricao());
                 return;
             }
         }
@@ -124,6 +125,10 @@ public class Main {
 
         for (ItemBibliotecaDigital item : estoque) {
             if (item.getId() == id) {
+                if (meusItens.contains(item)) {
+                    System.out.println("Item já existente nos seus itens.");
+                    return;
+                }
                 carrinho.add(item);
                 System.out.println("Item adicionado ao carrinho.");
                 return;
@@ -135,30 +140,52 @@ public class Main {
 
     private static void visualizarCarrinho() {
         System.out.println("\n=== Carrinho de Compras ===");
+        if (carrinho.isEmpty()) {
+            System.out.println("Nenhum item no carrinho.");
+            return;
+        }
         for (ItemBibliotecaDigital item : carrinho) {
-            System.out.println(item.toString());
+            System.out.println(item.descricao());
         }
     }
 
     private static void finalizarCompra() {
-        System.out.println("\n=== Finalizando Compra ===");
-        for (ItemBibliotecaDigital item : carrinho) {
-            meusItens.add(item);
-            carrinho.remove(item);
+        if (carrinho.isEmpty()) {
+            System.out.println("Carrinho vazio.");
+            return;
         }
 
-        System.out.println();
+        System.out.println("\n=== Finalizando Compra... ===");
+        // for (ItemBibliotecaDigital item : carrinho) {
+        //     meusItens.add(item);
+        //     carrinho.remove(item);
+        // }
+
+        List<ItemBibliotecaDigital> itensCompradosTemp = new ArrayList<>();
+
+        for (int i = 0; i < carrinho.size(); i++) {
+            ItemBibliotecaDigital item = carrinho.get(i);
+            itensCompradosTemp.add(item);
+            meusItens.add(item);
+            carrinho.remove(i);
+            i--;
+        }
         System.out.println("\n=== Compra Finalizada ===");
+        System.out.println("Itens comprados:");
+        for (ItemBibliotecaDigital item : itensCompradosTemp) {
+            System.out.println(item.descricao());
+        }
+        itensCompradosTemp.clear();
     }
 
     private static void visualizarMeusItens(Scanner scanner) {
         System.out.println("\n=== Seus Itens ===");
         for (ItemBibliotecaDigital item : meusItens) {
-            System.out.println(item.toString());
+            System.out.println(item.descricao());
         }
 
         if (meusItens.isEmpty()) {
-            System.out.println("Você não possui nenhum item!");
+            System.out.println("Você não possui nenhum item.");
             return;
         }
 
@@ -166,6 +193,7 @@ public class Main {
         System.out.println("Escolha a ação:");
         System.out.println("1. Baixar");
         System.out.println("2. Visualizar");
+        System.out.println("0. Voltar");
         System.out.print("Opção: ");
 
         int opcao = scanner.nextInt();
@@ -178,6 +206,9 @@ public class Main {
             case 2:
                 visualizar(scanner);
                 break;
+            case 0:
+                System.out.println("Voltando...");
+                break;
             default:
                 System.out.println("Opção inválida.");
         }
@@ -186,10 +217,9 @@ public class Main {
     private static void baixar(Scanner scanner) {
         System.out.println("\n=== Itens disponiveis para baixar ===");
         for (ItemBibliotecaDigital item : meusItens) {
-            System.out.println(item.toString());
+            System.out.println(item.descricao());
         }
         
-
         System.out.println("\n=== Digite o ID do item para baixar ===");
         System.out.print("ID: ");
 
@@ -217,7 +247,7 @@ public class Main {
         System.out.println("\n=== Itens disponiveis para visualizar ===");
         for (ItemBibliotecaDigital item : meusItens) {
             if (item instanceof VideoDigital) {
-                System.out.println(item.toString());
+                System.out.println(item.descricao());
             }
         }
 
@@ -245,6 +275,7 @@ public class Main {
         System.out.println("Escolha o tipo de item a cadastrar:");
         System.out.println("1. Ebook");
         System.out.println("2. Video Digital");
+        System.out.println("0. Voltar");
         System.out.print("Opção: ");
     
         int opcao = scanner.nextInt();
@@ -259,6 +290,9 @@ public class Main {
                 cadastrarVideoDigital(scanner);
                 incrementNextId();
                 break;
+            case 0:
+                System.out.println("Voltando...");
+                break;
             default:
                 System.out.println("Opção inválida.");
         }
@@ -267,7 +301,6 @@ public class Main {
     public static void cadastrarEbook(Scanner scanner) {
         System.out.print("Informe titulo: ");
         String titulo = scanner.nextLine();
-        scanner.nextLine();
     
         System.out.print("Informe autor: ");
         String autor = scanner.nextLine();
@@ -281,12 +314,11 @@ public class Main {
     public static void cadastrarVideoDigital(Scanner scanner) {
         System.out.print("Informe titulo: ");
         String titulo = scanner.nextLine();
-        scanner.nextLine();
     
         System.out.print("Informe autor: ");
         String autor = scanner.nextLine();
     
-        ItemBibliotecaDigital i = new Ebook(titulo, autor, getNextId());
+        ItemBibliotecaDigital i = new VideoDigital(titulo, autor, getNextId());
         estoque.add(i);
     
         System.out.println("Video Digital cadastrado com sucesso.");

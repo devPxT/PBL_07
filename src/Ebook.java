@@ -5,7 +5,7 @@ class Ebook extends ItemBibliotecaDigital implements Baixavel {
 
     @Override
     public String descricao() {
-        return  " id " + getId() + " Ebook: " + getTitulo() + " - Autor: " + getAutor();
+        return  "[Id. " + getId() + "] Ebook: " + getTitulo() + " - Autor: " + getAutor();
     }
 
     @Override

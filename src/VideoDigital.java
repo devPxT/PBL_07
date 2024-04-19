@@ -5,7 +5,7 @@ class VideoDigital extends ItemBibliotecaDigital implements Baixavel, Visualizav
 
     @Override
     public String descricao() {
-        return "Id: " + getId() + " Vídeo: " + getTitulo() + " - Autor: " + getAutor();
+        return "[Id. " + getId() + "] Vídeo: " + getTitulo() + " - Autor: " + getAutor();
     }
 
     @Override
